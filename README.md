@@ -24,4 +24,4 @@ step-2
 now in the resource group created previusly ,we create a data facotry resource and then we go to data factory studio
 the we go to linked servies and create following linked services
 the first sercvice is a souce from we are getting data and its github soo we craete a http  linked service
-and at base url palce we base url; of files location
+and at base url palce we base url of files location in github
