@@ -82,4 +82,12 @@ Both **Silver** and **Gold** layers are implemented using **Delta Live Tables**.
 
 ## Notes  
 - Ensure the `netflix_titles.csv` file is uploaded to the **Raw** container before running the pipeline.  
-- If the file is missing, the pipeline will not execute.  
+- If the file is missing, the pipeline will not execute.
+
+
+step-5 
+now we are gooing to azure databrciks ,databricks is a separate entitty in there fore to access data from data lake we need install a connector
+first install create a resouce databricks
+1. go to marketpalce ,search and install access connecotr for azure databricks
+2. select the appropratiate resource group and give a name to instance
+3. then clicks on review and create
