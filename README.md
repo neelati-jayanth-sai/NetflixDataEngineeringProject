@@ -88,6 +88,25 @@ Both **Silver** and **Gold** layers are implemented using **Delta Live Tables**.
 step-5 
 now we are gooing to azure databrciks ,databricks is a separate entitty in there fore to access data from data lake we need install a connector
 first install create a resouce databricks
+then go to databricks
+crete a workspace
+and go catalog 
+and now we are going to create a mettore ,
+before create metastore flow below steps 
 1. go to marketpalce ,search and install access connecotr for azure databricks
 2. select the appropratiate resource group and give a name to instance
 3. then clicks on review and create
+go to access contronetor and copy the access connecoter id
+then go the datalake where we created our containers previous and also create a newa connector called metastore,
+then go to iam access and add role and pick role called storge bob contributer
+then in memeber add a managed identiy and select the subsription and then the idnentdy  which in our case the access connecotr for azure databricks
+then review + assign
+no we have all preriquistes to crate a metastore
+now create a new mwtastore and fill the details appropiately
+and create
+unselecta automaticlly assign work space and then skip
+now to assign the workspace go to catalog then click on on created metastorea ndthen go workspace and click on assign workspace and select the prevously cfaete workspace
+
+after that go back to configuration and in matsore admin ,click edit and change the hased acounto to normal account as admin
+
+
