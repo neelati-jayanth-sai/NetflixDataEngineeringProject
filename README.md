@@ -1,112 +1,181 @@
-# Netflix Data Engineering Project  
+# **Netflix Data Engineering Project**
 
-This project demonstrates how to build a data engineering pipeline using **Azure Data Factory**, **Databricks**, **Azure Data Lake**, and **Azure Synapse Analytics**. We extract data from **GitHub**, process it using **Databricks Auto Loader**, and store it in a three-tier architecture within a Data Lake. Finally, the processed data is made available for reporting using **Power BI**.  
+This project showcases the development of a modern data engineering pipeline using **Azure Data Factory**, **Databricks**, **Azure Data Lake**, and **Azure Synapse Analytics**. We extract data from **GitHub**, process it using **Databricks Auto Loader**, store it in a **three-tier Data Lake architecture**, and expose it for analysis in **Power BI**.
 
-## Architecture Overview  
+---
 
-The data is stored in Azure Data Lake following a **three-tier architecture**:  
+## 🏗️ **Architecture Overview**
 
-- **Bronze Layer**: Stores raw incremental data.  
-- **Silver Layer**: Contains cleaned and transformed data.  
-- **Gold Layer**: Optimized for analytics and reporting using a **star schema**.  
+The pipeline adheres to a **three-tier architecture** within **Azure Data Lake**:
 
-Both **Silver** and **Gold** layers are implemented using **Delta Live Tables**.  
+- **Bronze Layer**: Stores raw, incremental data.
+- **Silver Layer**: Contains cleaned and transformed datasets.
+- **Gold Layer**: Stores aggregated data modeled using a **star schema**, optimized for analytics.
 
-## Tech Stack  
-- **Data Source**: GitHub (Raw CSV files)  
-- **Data Ingestion**: Azure Data Factory  
-- **Data Processing**: Databricks with Auto Loader  
-- **Storage**: Azure Data Lake (Bronze, Silver, Gold layers)  
-- **Data Warehousing**: Azure Synapse Analytics  
-- **Reporting**: Power BI  
+The **Silver** and **Gold** layers are built using **Delta Live Tables (DLT)**.
 
-## Project Setup  
+---
 
-### Step 1: Create Azure Resources  
+## 🧰 **Tech Stack**
 
-1. Log in to the **Azure Portal**.  
-2. Create a **Resource Group**.  
-3. Set up an **Azure Data Lake** and create the following containers:  
-   - `raw`  
-   - `bronze`  
-   - `silver`  
-   - `gold`  
+- **Data Source**: GitHub (CSV files)
+- **Data Ingestion**: Azure Data Factory
+- **Data Processing**: Databricks with Auto Loader
+- **Storage**: Azure Data Lake (Bronze, Silver, Gold)
+- **Data Warehousing**: Azure Synapse Analytics
+- **Visualization**: Power BI
 
-### Step 2: Configure Azure Data Factory  
+---
 
-1. In the **Azure Portal**, create a **Data Factory** within the previously created Resource Group.  
-2. Open **Azure Data Factory Studio**.  
-3. Navigate to **Manage > Linked Services**, and create the following linked services:  
-   - **Source (GitHub)**:  
-     - Create an **HTTP Linked Service**.  
-     - Set the **Base URL** to the raw file location in GitHub (e.g., `https://raw.githubusercontent.com/`).  
-     - Use **Anonymous Authentication**.  
-   - **Destination (Azure Data Lake)**:  
-     - Create a new **Linked Service** for Data Lake.  
-     - Select the Data Lake created in **Step 1**.  
-     - Test the connection to ensure it works.  
+## 🚀 **Project Setup**
 
-### Step 3: Create a Data Pipeline in Azure Data Factory  
+### **Step 1: Provision Azure Resources**
 
-1. In **Azure Data Factory**, go to the **Author** tab.  
-2. Click **New Pipeline** and configure the following components:  
-   - **Web Activity**:  
-     - Configure it with the GitHub URL for `netflix_titles.csv`.  
-     - Fetch metadata for validation.  
-   - **Set Variable Activity**:  
-     - Store the fetched data in a variable (Data Type: **String**).  
-   - **Validation Activity**:  
-     - Ensure `netflix_titles.csv` exists in the **Raw** container before proceeding.  
-   - **ForEach Activity**:  
-     - Process multiple files dynamically using the following array:  
+1. Log in to the **Azure Portal**.
+2. Create a **Resource Group**.
+3. Create an **Azure Data Lake Storage Gen2** account with the following containers:
+   - `raw`
+   - `bronze`
+   - `silver`
+   - `gold`
 
-       ```json
-       [
-         {"filename": "netflix_titles.csv", "foldername": "netflix_titles"},
-         {"filename": "netflix_category.csv", "foldername": "netflix_category"},
-         {"filename": "netflix_countries.csv", "foldername": "netflix_countries"},
-         {"filename": "netflix_directors.csv", "foldername": "netflix_directors"}
-       ]
-       ```  
-     - This enables dynamic file processing.  
-   - **Copy Data Activity**:  
-     - Use the **GitHub Linked Service** as the source.  
-     - Set the **relative file path** dynamically using parameters.  
-     - Configure the **sink (destination)** to store the file in the **Bronze** container.  
+---
 
-### Step 4: Publish & Run the Pipeline  
+### **Step 2: Set Up Azure Data Factory**
 
-1. Connect all components properly in the pipeline.  
-2. Click **Publish All** to save changes.  
-3. Add a **Trigger** and select **Trigger Now** to execute the pipeline.  
+1. Create a **Data Factory** under the same resource group.
+2. Launch **Data Factory Studio**.
+3. Go to **Manage > Linked Services** and create:
+   - **GitHub (HTTP)**:
+     - Base URL: `https://raw.githubusercontent.com/`
+     - Authentication: **Anonymous**
+   - **Azure Data Lake**:
+     - Connect to the Data Lake created earlier.
+     - Test connection to verify.
 
-## Notes  
-- Ensure the `netflix_titles.csv` file is uploaded to the **Raw** container before running the pipeline.  
-- If the file is missing, the pipeline will not execute.
+---
 
+### **Step 3: Build the Data Pipeline**
 
-step-5 
-now we are gooing to azure databrciks ,databricks is a separate entitty in there fore to access data from data lake we need install a connector
-first install create a resouce databricks
-then go to databricks
-crete a workspace
-and go catalog 
-and now we are going to create a mettore ,
-before create metastore flow below steps 
-1. go to marketpalce ,search and install access connecotr for azure databricks
-2. select the appropratiate resource group and give a name to instance
-3. then clicks on review and create
-go to access contronetor and copy the access connecoter id
-then go the datalake where we created our containers previous and also create a newa connector called metastore,
-then go to iam access and add role and pick role called storge bob contributer
-then in memeber add a managed identiy and select the subsription and then the idnentdy  which in our case the access connecotr for azure databricks
-then review + assign
-no we have all preriquistes to crate a metastore
-now create a new mwtastore and fill the details appropiately
-and create
-unselecta automaticlly assign work space and then skip
-now to assign the workspace go to catalog then click on on created metastorea ndthen go workspace and click on assign workspace and select the prevously cfaete workspace
+1. In **Data Factory**, open the **Author** tab and create a new pipeline.
+2. Add the following components:
+   - **Web Activity**: Fetch metadata for `netflix_titles.csv`.
+   - **Set Variable**: Store file metadata as a string variable.
+   - **Validation Activity**: Ensure the `netflix_titles.csv` file exists in the **Raw** container.
+   - **ForEach Activity**: Dynamically process files using this JSON array:
 
-after that go back to configuration and in matsore admin ,click edit and change the hased acounto to normal account as admin
+     ```json
+     [
+       {"filename": "netflix_titles.csv", "foldername": "netflix_titles"},
+       {"filename": "netflix_category.csv", "foldername": "netflix_category"},
+       {"filename": "netflix_countries.csv", "foldername": "netflix_countries"},
+       {"filename": "netflix_directors.csv", "foldername": "netflix_directors"}
+     ]
+     ```
 
+   - **Copy Data Activity**:
+     - Source: GitHub (HTTP)
+     - Destination: Azure Data Lake (Bronze layer)
+     - Use dynamic file path parameters.
 
+---
+
+### **Step 4: Run the Pipeline**
+
+1. Validate connections between all activities.
+2. Click **Publish All**.
+3. Add a **Trigger**, then select **Trigger Now** to execute.
+
+📝 **Note**: Ensure `netflix_titles.csv` is uploaded to the **Raw** container. The pipeline will not run if it is missing.
+
+---
+
+## ⚙️ **Step 5: Set Up Azure Databricks**
+
+Azure Databricks is a separate service and requires specific configuration to access data from Azure Data Lake.
+
+### **Step 5.1: Create a Databricks Workspace**
+
+1. In Azure Portal, create a **Databricks** workspace.
+2. Launch the workspace.
+3. Go to **Settings > Account > Catalogs**.
+
+### **Step 5.2: Install Access Connector for Azure Databricks**
+
+1. Go to the **Azure Marketplace**.
+2. Search and install **Access Connector for Azure Databricks**.
+3. Select the resource group and provide a name.
+4. Click **Review + Create** and deploy.
+
+### **Step 5.3: Configure IAM Access**
+
+1. Navigate to your **Azure Data Lake**.
+2. Open **IAM (Access Control)** > **Add Role Assignment**.
+3. Role: `Storage Blob Data Contributor`
+4. Member Type: **Managed Identity**
+5. Select the **Access Connector** created earlier.
+6. Click **Review + Assign**.
+
+---
+
+### **Step 5.4: Create a Unity Metastore**
+
+1. Go back to **Databricks > Catalogs**.
+2. Click **Create Metastore**.
+3. Fill out required details:
+   - Name
+   - Storage root (one of your containers)
+4. Uncheck **Automatically assign workspace**.
+5. Skip and proceed.
+
+### **Step 5.5: Assign Metastore to Workspace**
+
+1. In **Catalog > Metastores**, click your newly created metastore.
+2. Click **Assign Workspace** and select your Databricks workspace.
+
+---
+
+### **Step 5.6: Final Metastore Setup**
+
+1. Go to **Configuration > Metastore Admin**.
+2. Change **Hashed account** to your actual admin account.
+
+---
+
+### **Step 5.7: Create a Catalog**
+
+1. In **Catalog**, click **+ New Catalog**.
+2. Choose **Standard** type.
+3. No need to specify external location (already configured at metastore level).
+4. Grant access to all accounts if only one user is present.
+
+---
+
+### **Step 5.8: Configure External Locations**
+
+1. Create a **Storage Credential**:
+   - Name it appropriately.
+   - Provide the **Access Connector ID**.
+
+2. Create **External Locations** for each tier:
+   - **Bronze External Location**:
+     - Name: `bronze_ext`
+     - Path: URL of Bronze container
+     - Select the storage credential you just created
+   - Repeat for **Silver** and **Gold**
+
+---
+
+## ⚙️ **Step 6: Configure Compute and Notebook**
+
+1. Go to **Compute** and create a new cluster:
+   - **Policy**: Personal
+   - **Runtime Version**: LTS version (most stable)
+   - **Auto Terminate**: After 20 minutes of inactivity
+
+2. Go to **Workspace**, create a folder (e.g., `Netflix Project`).
+3. Inside it, create a new **Notebook**:
+   - Rename it (e.g., `1_AutoLoader`)
+   - Use it to write logic for **Auto Loader** and **DLT pipeline** development.
+
+---
