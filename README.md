@@ -162,7 +162,7 @@ Azure Databricks is a separate service and requires specific configuration to ac
      - Name: `bronze_ext`
      - Path: URL of Bronze container
      - Select the storage credential you just created
-   - Repeat for **Silver** and **Gold**
+   - Repeat for **Raw** , **Silver** and **Gold** 
 
 ---
 
@@ -179,3 +179,9 @@ Azure Databricks is a separate service and requires specific configuration to ac
    - Use it to write logic for **Auto Loader** and **DLT pipeline** development.
 
 ---
+
+
+step 6.1 -
+just to repluicate the code of 1_autoloader
+
+thwen create a new nea notebookmin the workspace called silver and replicate the silver notebook povided in the repo
