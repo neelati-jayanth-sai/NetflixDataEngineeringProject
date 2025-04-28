@@ -184,4 +184,7 @@ Azure Databricks is a separate service and requires specific configuration to ac
 step 6.1 -
 just to repluicate the code of 1_autoloader
 
+step7-
 thwen create a new nea notebookmin the workspace called silver and replicate the silver notebook povided in the repo
+
+and the silver notebook is going to be parameterized note book for which we care going to create a workflow to get data into our silver container
